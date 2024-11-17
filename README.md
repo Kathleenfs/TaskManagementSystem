@@ -16,7 +16,8 @@ Using Trello helped in:
 3. *Collaboration*: Facilitated teamwork and task delegation (if working with a team).  
 
 To demonstrate, here's a snapshot of the Trello board used for this project:  
-[![Trello Board Screenshot](link-to-screenshot.png)]([link-to-trello-board-if-public](https://trello.com/invite/b/66a6827d42d76b9dc346601c/ATTI451ba54928fd9d1abff75a5cbed085a944CBBEC1/gestao-de-projetos))
+[Link To Trello Board ](https://trello.com/invite/b/66a6827d42d76b9dc346601c/ATTI451ba54928fd9d1abff75a5cbed085a944CBBEC1/gestao-de-projetos)
+![image](https://github.com/user-attachments/assets/10b036c1-75e3-4369-8131-112f76202acd)
 
 ## Features  
 - Create, read, update, and delete tasks.  
