@@ -119,4 +119,4 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 ## Contact :mailbox_with_mail:
 
-For questions or support, feel free to contact [Kathleen Ferreira](mailto:kathleenfss4@gmail.com).
+For questions or support, feel free to contact [Kathleen Ferreira](https://www.linkedin.com/in/kathleen-ferreira-2b13441a5/).
