@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import com.kfss.TaskManagementSystem.Category.Category;
 import com.kfss.TaskManagementSystem.User.User;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -77,8 +76,5 @@ public class Task {
 	public void setStatus(TaskStatus status) {
 		this.status = status;
 	}
-	
-	
-	
 	
 }
