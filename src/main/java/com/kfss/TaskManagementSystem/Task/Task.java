@@ -76,5 +76,21 @@ public class Task {
 	public void setStatus(TaskStatus status) {
 		this.status = status;
 	}
+	public Task(Long id, String title, String description, TaskStatus status, LocalDate dueDate, LocalDate createdAt,
+			User user, Category category) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.status = status;
+		this.dueDate = dueDate;
+		this.createdAt = createdAt;
+		this.user = user;
+		this.category = category;
+	}
+	
+	public Task() {
+		
+	}
 	
 }

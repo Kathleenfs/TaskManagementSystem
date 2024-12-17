@@ -78,7 +78,19 @@ public class User {
 		User other = (User) obj;
 		return Objects.equals(password, other.password);
 	}
+	public User(Long id, String name, String email, String password, LocalDate createdAt, List<Task> tasks) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.createdAt = createdAt;
+		this.tasks = tasks;
+	}
 	
+	public User() {
+		
+	}
 	
 
 }

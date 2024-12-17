@@ -45,6 +45,16 @@ public class Category {
 	public void setCreatedAt(LocalDate createdAt) {
 		this.createdAt = createdAt;
 	}
+	public Category(Long id, String name, String description, LocalDate createdAt) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.createdAt = createdAt;
+	}
 	
+	public Category() {
+		
+	}
 	
 }
