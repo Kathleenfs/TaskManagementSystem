@@ -26,7 +26,7 @@ public class UserService {
 	}
 
 	public User getUserById(Long id) {
-		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário com id " + id +" não encontrado"));
 	}
 
 	public User updateUser(Long id, User userDetails) {
