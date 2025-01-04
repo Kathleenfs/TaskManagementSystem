@@ -5,7 +5,8 @@ import { Task } from '../../shared/models/task.model';
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.css']
+  styleUrls: ['./task-list.component.css'],
+  standalone: true,
 })
 export class TaskListComponent implements OnInit {
   tasks: Task[] = [];
