@@ -1,26 +1,27 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
+import { HttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
-import { CoreModule } from './core/core.module';
-import { SharedModule } from './shared/shared.module';
-import { TasksModule } from './tasks/tasks.module'; // Importa o FormsModule se você estiver usando formulários
+import { TaskListComponent } from './tasks/task-list/task-list.component';
+import { TaskFormComponent } from './tasks/task-form/task-form.component';
+import { TaskDetailsComponent } from './tasks/task-details/task-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-   
+    TaskListComponent,
+    TaskFormComponent,
+    TaskDetailsComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    CoreModule,
-    SharedModule,
-    TasksModule 
+    AppRoutingModule, // Importa o módulo de rotas
+    HttpClient,
   ],
-  providers: [],
+  providers: [ provideHttpClient(withInterceptorsFromDi())],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
