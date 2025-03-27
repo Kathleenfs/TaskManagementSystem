@@ -1,24 +1,37 @@
 package com.kfss.TaskManagementSystem.User;
 
-import java.time.LocalDate;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.kfss.TaskManagementSystem.User.dto.RegisterDTO;
 import com.kfss.TaskManagementSystem.util.*;
+
+import jakarta.validation.Valid;
 
 @Service
 public class UserService {
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
-	public User createUser(User user) {
-		user.setCreatedAt(LocalDate.now());
-		return userRepository.save(user);
+	@Transactional
+	public void registerUser(@Valid RegisterDTO registerDTO) {
+		if (userRepository.existsByName(registerDTO.getName())) {
+			throw new UserAlreadyExistsException("Usuário já cadastrado com este nome.");
+		}
+
+		User user = new User();
+		user.setName(registerDTO.getName());
+		user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+
+		userRepository.save(user);
 	}
 
 	public List<User> getAllUser() {
@@ -26,21 +39,21 @@ public class UserService {
 	}
 
 	public User getUserById(Long id) {
-		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário com id " + id +" não encontrado"));
+		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
 	}
 
+	@Transactional
 	public User updateUser(Long id, User userDetails) {
-		User user = getUserById(id);
-		user.setName(userDetails.getName());
-		user.setEmail(userDetails.getEmail());
-		user.setPassword(userDetails.getPassword());
-		return userRepository.save(user);
+		User existingUser = getUserById(id);
+		existingUser.setName(userDetails.getName());
+		existingUser.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+		return userRepository.save(existingUser);
 	}
-	
+
+	@Transactional
 	public void deleteUser(Long id) {
 		User user = getUserById(id);
-	    userRepository.delete(user);
-		
+		userRepository.delete(user);
 	}
 
 }

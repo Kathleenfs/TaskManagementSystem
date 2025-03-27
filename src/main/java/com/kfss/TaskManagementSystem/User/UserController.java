@@ -1,55 +1,75 @@
 package com.kfss.TaskManagementSystem.User;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kfss.TaskManagementSystem.User.dto.LoginDTO;
+import com.kfss.TaskManagementSystem.User.dto.RegisterDTO;
+import com.kfss.TaskManagementSystem.security.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
+@RequestMapping("/auth")
 public class UserController {
-	
-	@Autowired
-	private UserService userService;
-	
-	public UserController(UserService userService) {
+
+	private final UserService userService;
+	private final JwtUtil jwtUtil;
+	private final AuthenticationManager authenticationManager;
+
+	// Injeção via construtor para facilitar testes e evitar @Autowired em atributos
+	public UserController(UserService userService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
 		this.userService = userService;
-	}
-	
-	@PostMapping("/user/new")
-	public ResponseEntity<User> createUser(@Valid @RequestBody User user){
-		return new ResponseEntity<>(userService.createUser(user),HttpStatus.CREATED);
-	}
-	
-	@GetMapping
-	public ResponseEntity<List<User>> getAllUsers(){
-		return ResponseEntity.ok(userService.getAllUser());
-	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable Long id){
-		return ResponseEntity.ok(userService.getUserById(id));
-	}
-	
-	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails){
-		return ResponseEntity.ok(userService.updateUser(id, userDetails));
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id){
-		userService.deleteUser(id);
-		return ResponseEntity.noContent().build();
+		this.jwtUtil = jwtUtil;
+		this.authenticationManager = authenticationManager;
 	}
 
+	@PostMapping("/register")
+	@ResponseStatus(HttpStatus.CREATED)
+	public String registerUser(@Valid @RequestBody RegisterDTO registerDTO) {
+		userService.registerUser(registerDTO);
+		return "Usuário registrado com sucesso!";
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<String> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
+		try {
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
+
+			String token = jwtUtil.generateToken(authentication.getName());
+			return ResponseEntity.ok("Bearer " + token);
+
+		} catch (AuthenticationException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas.");
+		}
+	}
+
+	// o spring ja converte automaticamente o retorno para Json. Evitar
+	// responseEntity desnecessario
+	@GetMapping("/users")
+	public List<User> getAllUsers() {
+		return userService.getAllUser();
+	}
+
+	@GetMapping("/users/{id}")
+	public ResponseEntity<User> getUserById(@PathVariable Long id) {
+		return ResponseEntity.ok(userService.getUserById(id));
+	}
+
+	@PutMapping("/users/{id}")
+	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+		return ResponseEntity.ok(userService.updateUser(id, userDetails));
+	}
+
+	@DeleteMapping("/users/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteUser(@PathVariable Long id) {
+		userService.deleteUser(id);
+	}
 }
